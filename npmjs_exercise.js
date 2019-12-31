@@ -33,8 +33,10 @@ async function dependencies_resolver(req, res) {
   if (result.length == 0) {
     res.send(util.format("No dependencies were found for package %s and version %s", package_name, package_version));
   }
+  else {
+    res.send(JSON.stringify(result));
+  }
 
-  res.send(JSON.stringify(result));
 }
 
 

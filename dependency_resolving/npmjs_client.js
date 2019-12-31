@@ -23,10 +23,13 @@ class NPMJSClient {
                 }
 
                 let response_text = body
-                if (response_text.includes('package not found')) {
-                    // TODO: Maybe reject(new PackageNotFound())
-                    throw new PackageNotFound()
-                }
+                // TODO: response_text can return as json object if the request is good or 
+                // as string if the request is bad - so if it's a good request, includes will not work.
+                // Need to fix that
+                // if (response_text.includes('package not found')) {
+                //     // TODO: Maybe reject(new PackageNotFound())
+                //     throw new PackageNotFound()
+                // }
 
                 console.log(util.format("Done querying NPMJS for information on package %s-%s.", name, version))
 
