@@ -8,13 +8,13 @@ class DependencyMapper {
     constructor(cache) {
         this.cache = cache;
     }
-    _create_package_dict(name, version) {
+    __createPackageDict(name, version) {
         return {
             'name': name,
             'version': version
         }
     }
-    _get_explicit_version(package_version) {
+    __getExplicitVersion(packageVersion) {
         /* TODO: Better handle semantic versioning and conditions - ^, ~, ||.
         #  and things like:
         #  {
@@ -23,50 +23,50 @@ class DependencyMapper {
             #
         }
         #  For now I'm only extracting the first version number I find */
-        let version = package_version.replace('~', '').replace('^', '')
+        let version = packageVersion.replace('~', '').replace('^', '')
 
         // Remove leading and trailing regex
         return version.replace(/^(>|<|=| |\.|\||&)|(>|<|=| |\.|\||&)$/g, '').split(' ')[0];
     }
 
-    async get_dependencies_tree_for_package(name, version) {
+    async getDependenciesTreeForPackage(name, version) {
         console.log(util.format("Retrieving dependencies tree for package %s-%s...", name, version));
 
-        let dependencies_queue = []
-        let total_num_of_dependencies = 0
+        let dependenciesQueue = []
+        let totalNumOfDependencies = 0
 
-        let root_package = this._create_package_dict(name, this._get_explicit_version(version))
-        dependencies_queue.push(root_package)
+        let rootPackage = this.__createPackageDict(name, this.__getExplicitVersion(version))
+        dependenciesQueue.push(rootPackage)
 
-        while (dependencies_queue.length > 0) {
-            let curr_package = dependencies_queue.pop()
-            let package_dependencies = await this.cache.get(curr_package['name'], curr_package['version'])
+        while (dependenciesQueue.length > 0) {
+            let currPackage = dependenciesQueue.pop()
+            let packageDependencies = await this.cache.get(currPackage['name'], currPackage['version'])
 
-            let sub_dependencies = []
+            let subDependencies = []
 
-            for (const [dep_name, dep_version] of Object.entries(package_dependencies)) {
-                let actual_version = this._get_explicit_version(dep_version);
+            for (const [dependencyName, dependencyVersion] of Object.entries(packageDependencies)) {
+                let actualVersion = this.__getExplicitVersion(dependencyVersion);
 
-                let child = this._create_package_dict(dep_name, actual_version);
-                dependencies_queue.push(child);
-                sub_dependencies.push(child);
+                let child = this.__createPackageDict(dependencyName, actualVersion);
+                dependenciesQueue.push(child);
+                subDependencies.push(child);
             }
 
             // If the package has dependencies, add them to the package object
-            if (sub_dependencies.length > 0) {
-                curr_package['dependencies'] = sub_dependencies
-                total_num_of_dependencies += sub_dependencies.length
+            if (subDependencies.length > 0) {
+                currPackage['dependencies'] = subDependencies
+                totalNumOfDependencies += subDependencies.length
             }
         }
 
-        console.log(util.format(this.SUMMARY_LOG_MESSAGE, name, version, total_num_of_dependencies))
+        console.log(util.format(this.SUMMARY_LOG_MESSAGE, name, version, totalNumOfDependencies))
 
         // Return just the dependencies, or an empty list
-        let dependencies_tree = root_package['dependencies']
-        if (dependencies_tree === undefined) {
-            dependencies_tree = []
+        let dependenciesTree = rootPackage['dependencies']
+        if (dependenciesTree === undefined) {
+            dependenciesTree = []
         }
-        return dependencies_tree
+        return dependenciesTree
     }
 }
 

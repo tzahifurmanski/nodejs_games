@@ -1,0 +1,23 @@
+{
+    "name": "nodejs-npmjs-dependencies-resolver",
+    "description": "A NodeJS package for querying NPMJS for the dependencies tree for a specific package and version.",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "Tzahi Furmanski",
+    "license": "ISC",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tzahifurmanski/nodejs_npmjs_dependencies_resolver"
+    },
+    "homepage": "https://github.com/tzahifurmanski/nodejs_npmjs_dependencies_resolver",
+    "scripts": {
+        "build": "node index.js",
+        "test": "jest"
+    },
+    "dependencies": {
+        "express": "4.17.1",
+        "express-validator": "6.3.0",
+        "request": "2.88.0"
+    },
+    "devDependencies": {}
+}
