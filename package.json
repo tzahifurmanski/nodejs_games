@@ -15,7 +15,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "express": "4.17.1",
+        "express": "4.17.3",
         "express-validator": "6.3.0",
         "request": "2.88.0"
     },
